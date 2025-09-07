@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Terra Tech offers AI-powered sustainable agriculture advisory services to empower farmers with expert insights on soil health, pest control, crop management, and more." />
+  <meta name="theme-color" content="#388e3c" />
+  <title>Terra Tech - Professional Advisory for Sustainable Agriculture</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <!-- AOS CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="1chatgpt.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="header" data-aos="fade-down" data-aos-duration="1000">
+    <div class="container header-container">
+      <h1 class="logo">🌱 Terra Tech</h1>
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="#home">Home</a>
+        <a href="#advisory">Advisory</a>
+        <a href="#solutions">Solutions</a>
+        <a href="#resources">Resources</a>
+        <a href="#about">About Us</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section
+    id="home"
+    class="section hero"
+    style="background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;"
+  >
+    <div class="container hero-container" style="background: rgba(255,255,255,0.85); border-radius: 16px; padding: 2rem;" data-aos="fade-up" data-aos-duration="1200">
+      <div class="hero-content">
+        <h1>Empowering Farmers with AI-Powered Insights</h1>
+        <h2 style="color:#388e3c; font-weight:600;">Your trusted partner for sustainable agriculture advisory</h2>
+        <p>
+          Get expert solutions for soil health, pest control, crop management, and more. Terra Tech's AI assistant and advisory team are here to help you grow smarter.
+        </p>
+        <a href="#solutions" class="cta-btn">Explore Solutions</a>
+      </div>
+      <div class="hero-image">
+        <img
+          src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=500&q=80"
+          alt="Smart Farming"
+          loading="lazy"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- Advisory Section -->
+  <section id="advisory" class="section advisory" data-aos="fade-right" data-aos-duration="1000">
+    <div class="container">
+      <h2>Expert Advisory</h2>
+      <p>
+        Connect with our agronomists for personalized advice on crop planning, pest management, and sustainable practices. Our experts are available for online consultations and field visits.
+      </p>
+      <div class="advisory-image">
+        <img
+          src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=600&q=80"
+          alt="Advisory Team"
+          style="border-radius:12px"
+          loading="lazy"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- Solutions Section -->
+  <section id="solutions" class="section solutions" data-aos="fade-left" data-aos-duration="1000">
+    <div class="container">
+      <h2>AI-Powered Solutions</h2>
+      <div class="solutions-grid">
+        <div class="solution-card" data-aos="zoom-in" data-aos-delay="100">
+          <img src="https://img.icons8.com/fluency/96/insect.png" alt="Pest Control Icon" loading="lazy" />
+          <h3>Pest &amp; Disease Control</h3>
+          <p>Identify pests and diseases with AI and get eco-friendly treatment recommendations.</p>
+        </div>
+        <div class="solution-card" data-aos="zoom-in" data-aos-delay="200">
+          <img src="https://img.icons8.com/color/96/soil.png" alt="Soil Health Icon" loading="lazy" />
+          <h3>Soil Health Analysis</h3>
+          <p>Learn how to improve soil quality for higher yields and stronger crops.</p>
+        </div>
+        <div class="solution-card" data-aos="zoom-in" data-aos-delay="300">
+          <img src="https://img.icons8.com/color/96/plant-under-sun.png" alt="Crop Management Icon" loading="lazy" />
+          <h3>Crop Management</h3>
+          <p>Get advice on planting schedules, irrigation, and nutrient optimization.</p>
+        </div>
+        <div class="solution-card" data-aos="zoom-in" data-aos-delay="400">
+          <img src="https://img.icons8.com/color/96/tractor.png" alt="Machinery Advisory" loading="lazy" />
+          <h3>Machinery Advisory</h3>
+          <p>Find the best equipment for your farm and get maintenance tips from experts.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Case 1: Image-only query -->
+  <section class="query-case" id="case-image-only" aria-label="Image query input">
+    <h4>Case 1: Upload Image Query</h4>
+    <input type="file" id="image-only-input" accept="image/*" aria-describedby="image-only-desc" />
+    <p id="image-only-desc" class="input-desc">Upload an image related to your farming query.</p>
+    <button id="image-only-submit" type="button" class="submit-btn">Submit Image Query</button>
+  </section>
+
+  <!-- Case 2: Text-only query -->
+  <section class="query-case" id="case-text-only" aria-label="Text query input">
+    <h4>Case 2: Enter Text Query</h4>
+    <input type="text" id="text-only-input" placeholder="Type your farming question here..." aria-describedby="text-only-desc" />
+    <p id="text-only-desc" class="input-desc">Enter your question in text format.</p>
+    <button id="text-only-submit" type="button" class="submit-btn">Submit Text Query</button>
+  </section>
+
+  <!-- Case 3: Combined image + text query -->
+  <section class="query-case" id="case-both" aria-label="Combined image and text query input">
+    <h4>Case 3: Upload Image and Enter Text</h4>
+    <input type="file" id="both-image-input" accept="image/*" aria-describedby="both-image-desc" />
+    <p id="both-image-desc" class="input-desc">Upload an image related to your query.</p>
+    <input type="text" id="both-text-input" placeholder="Type additional details here..." aria-describedby="both-text-desc" />
+    <p id="both-text-desc" class="input-desc">Enter your question or details in text format.</p>
+    <button id="both-submit" type="button" class="submit-btn">Submit Combined Query</button>
+  </section>
+</div>
+
+
+  <!-- Resources Section -->
+  <section id="resources" class="section resources" data-aos="fade-up" data-aos-duration="1000">
+    <div class="container">
+      <h2>Resources</h2>
+      <ul>
+        <li>
+          <a href="https://www.fao.org/sustainable-agriculture/en/" target="_blank" rel="noopener noreferrer"
+            >FAO Sustainable Agriculture</a
+          >
+        </li>
+        <li>
+          <a href="https://www.icar.org.in/" target="_blank" rel="noopener noreferrer">ICAR - Indian Council of Agricultural Research</a>
+        </li>
+        <li>
+          <a href="https://www.agriculture.com/" target="_blank" rel="noopener noreferrer">Agriculture.com</a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- About Us Section -->
+  <section id="about" class="section about" data-aos="fade-right" data-aos-duration="1000">
+    <div class="container about-container">
+      <div class="about-text">
+        <h2>About Us</h2>
+        <p>
+          Terra Tech is dedicated to revolutionizing agriculture through technology. Our platform equips farmers with the tools and knowledge to face modern challenges while ensuring sustainability.
+        </p>
+        <p>
+          Our team of agronomists, data scientists, and engineers constantly update our knowledge base to reflect the latest agricultural research and best practices.
+        </p>
+      </div>
+      <div class="about-image">
+        <img
+          src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80"
+          alt="Farming Technology"
+          loading="lazy"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="section contact" data-aos="fade-up" data-aos-duration="1000">
+    <div class="container">
+      <h2>Contact Us</h2>
+      <p>Email: <a href="mailto:info@terratech.com">info@terratech.com</a></p>
+      <p>Phone: +91-12345-67890</p>
+      <div class="social-links">
+        <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer">Twitter</a> |
+        <a href="https://facebook.com/" target="_blank" rel="noopener noreferrer">Facebook</a> |
+        <a href="https://instagram.com/" target="_blank" rel="noopener noreferrer">Instagram</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer" data-aos="fade-up" data-aos-duration="1000">
+    <div class="container">
+      <p>&copy; 2024 Terra Tech. All rights reserved.</p>
+      <p>Made with ❤️ for sustainable farming.</p>
+    </div>
+  </footer>
+
+  <!-- Chatbot Button -->
+  <button id="chat-button" class="chat-button" type="button" aria-expanded="false" aria-controls="chat-container">
+    💬 Ask Terra Tech
+  </button>
+
+  <!-- Chatbot Container -->
+  <div id="chat-container" class="chat-container hidden" tabindex="0" role="region" aria-label="Terra Tech chat assistant">
+  <div class="chat-header">
+    <h3>Terra Tech Assistant</h3>
+    <button id="close-chat" class="close-chat" type="button" aria-label="Close chat">&times;</button>
+  </div>
+  <div id="chat-box" class="chat-box" aria-live="polite" aria-atomic="false" role="log">
+    <div class="message bot-message">👋 Welcome to Terra Tech! How can I help you with your farming questions today?</div>
+  </div>
+
+ 
+  <!-- AOS JS -->
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+
+  <!-- Custom JS -->
+  <script src="2try.js"></script>
+
+  <script>
+    // Initialize AOS
+    AOS.init({
+      once: true,
+      duration: 800,
+      easing: 'ease-in-out',
+    });
+  </script>
+</body>
+</html>
