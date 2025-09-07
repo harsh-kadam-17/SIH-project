@@ -106,32 +106,193 @@
     </div>
   </section>
   
-  <!-- Case 1: Image-only query -->
-  <section class="query-case" id="case-image-only" aria-label="Image query input">
-    <h4>Case 1: Upload Image Query</h4>
-    <input type="file" id="image-only-input" accept="image/*" aria-describedby="image-only-desc" />
-    <p id="image-only-desc" class="input-desc">Upload an image related to your farming query.</p>
-    <button id="image-only-submit" type="button" class="submit-btn">Submit Image Query</button>
-  </section>
+ <!-- Wrapper -->
+<div class="query-container">
+   
+  <h1 style="text-align:center; color:#2f7a32;">🌱 Terra Tech Farming Assistant</h1>
 
-  <!-- Case 2: Text-only query -->
-  <section class="query-case" id="case-text-only" aria-label="Text query input">
-    <h4>Case 2: Enter Text Query</h4>
-    <input type="text" id="text-only-input" placeholder="Type your farming question here..." aria-describedby="text-only-desc" />
-    <p id="text-only-desc" class="input-desc">Enter your question in text format.</p>
-    <button id="text-only-submit" type="button" class="submit-btn">Submit Text Query</button>
-  </section>
+  <div class="query-container">
 
-  <!-- Case 3: Combined image + text query -->
-  <section class="query-case" id="case-both" aria-label="Combined image and text query input">
-    <h4>Case 3: Upload Image and Enter Text</h4>
-    <input type="file" id="both-image-input" accept="image/*" aria-describedby="both-image-desc" />
-    <p id="both-image-desc" class="input-desc">Upload an image related to your query.</p>
-    <input type="text" id="both-text-input" placeholder="Type additional details here..." aria-describedby="both-text-desc" />
-    <p id="both-text-desc" class="input-desc">Enter your question or details in text format.</p>
-    <button id="both-submit" type="button" class="submit-btn">Submit Combined Query</button>
-  </section>
-</div>
+    <!-- Case 1 -->
+    <div class="query-card">
+      <h3>🌱 Case 1: Upload Image Query</h3>
+      <p>Upload one or more farming images.</p>
+      <input id="image-only-input" type="file" accept="image/*" class="file-input" multiple />
+      <div id="preview1" class="preview"></div>
+      <button id="image-only-submit" class="submit-btn">Submit Image Query</button>
+      <div id="response1" class="response-box"></div>
+    </div>
+
+    <!-- Case 2 -->
+    <div class="query-card">
+      <h3>💬 Case 2: Enter Text Query</h3>
+      <p>Type your farming question here.</p>
+      <input id="text-only-input" type="text" placeholder="Type your farming question..." class="text-input" />
+      <button id="text-only-submit" class="submit-btn">Submit Text Query</button>
+      <div id="response2" class="response-box"></div>
+    </div>
+
+    <!-- Case 3 -->
+    <div class="query-card">
+      <h3>🌿 Case 3: Upload Image and Enter Text</h3>
+      <p>Combine text and multiple images for detailed queries.</p>
+      <input id="both-text-input" type="text" placeholder="Describe issue..." class="text-input" />
+      <input id="both-image-input" type="file" accept="image/*" class="file-input" multiple />
+      <div id="preview3" class="preview"></div>
+      <button id="both-submit" class="submit-btn">Submit Both</button>
+      <div id="response3" class="response-box"></div>
+    </div>
+
+  </div>
+
+  <!-- Loader -->
+  <div id="loader" class="loader"></div>
+
+  <script>
+    // Removed duplicate declaration of API_KEY
+    // Removed duplicate declaration of API_URL
+
+    function showLoader() {
+      document.getElementById("loader").style.display = "block";
+    }
+    function hideLoader() {
+      document.getElementById("loader").style.display = "none";
+    }
+
+    function fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(",")[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function showPreview(fileInputId, previewId) {
+      const files = document.getElementById(fileInputId).files;
+      const previewDiv = document.getElementById(previewId);
+      previewDiv.innerHTML = "";
+      if (files.length > 0) {
+        Array.from(files).forEach(file => {
+          const reader = new FileReader();
+          reader.onload = e => {
+            const img = document.createElement("img");
+            img.src = e.target.result;
+            previewDiv.appendChild(img);
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+    }
+
+    async function askAIwithImages(files, userText, responseBoxId) {
+      showLoader();
+      try {
+        const imagePromises = Array.from(files).map(file => fileToBase64(file));
+        const base64Images = await Promise.all(imagePromises);
+
+        const contentArray = [{ type: "text", text: userText || "Analyze these farming images and suggest a solution." }];
+        base64Images.forEach(img => {
+          contentArray.push({ type: "image_url", image_url: { url: `data:image/jpeg;base64,${img}` } });
+        });
+
+        const res = await fetch(API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${API_KEY}`
+          },
+          body: JSON.stringify({
+            model: "gpt-4o-mini",
+            messages: [
+              { role: "system", content: "You are Terra Tech assistant. Always give concise farming-related solutions." },
+              { role: "user", content: contentArray }
+            ],
+            max_tokens: 400
+          })
+        });
+
+        const data = await res.json();
+        const answer = data.choices?.[0]?.message?.content || "⚠️ No response from AI.";
+
+        const box = document.getElementById(responseBoxId);
+        box.style.display = "block";
+        box.textContent = "🌱 " + answer;
+
+      } catch (err) {
+        console.error(err);
+        alert("Error analyzing images.");
+      }
+      hideLoader();
+    }
+
+    async function askAItextOnly(query, responseBoxId) {
+      showLoader();
+      try {
+        const res = await fetch(API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer $("API key")`
+          },
+          body: JSON.stringify({
+            model: "gpt-4o-mini",
+            messages: [
+              { role: "system", content: "You are Terra Tech assistant. Only answer agriculture-related questions." },
+              { role: "user", content: query }
+            ],
+            max_tokens: 200
+          })
+        });
+
+        const data = await res.json();
+        const answer = data.choices?.[0]?.message?.content || "⚠️ No response from AI.";
+
+        const box = document.getElementById(responseBoxId);
+        box.style.display = "block";
+        box.textContent = "🌱 " + answer;
+
+      } catch (err) {
+        console.error(err);
+        alert("Error fetching AI response.");
+      }
+      hideLoader();
+    }
+
+    // Case 1: Multiple Images Only
+    document.getElementById("image-only-input").addEventListener("change", () => {
+      showPreview("image-only-input", "preview1");
+    });
+    document.getElementById("image-only-submit").addEventListener("click", async () => {
+      const files = document.getElementById("image-only-input").files;
+      if (files.length === 0) return alert("Please upload at least one image.");
+      askAIwithImages(files, null, "response1");
+    });
+
+    // Case 2: Text Only
+    document.getElementById("text-only-submit").addEventListener("click", () => {
+      const text = document.getElementById("text-only-input").value;
+      if (!text.trim()) return alert("Please enter your question.");
+      askAItextOnly(text, "response2");
+    });
+
+    // Case 3: Text + Multiple Images
+    document.getElementById("both-image-input").addEventListener("change", () => {
+      showPreview("both-image-input", "preview3");
+    });
+    document.getElementById("both-submit").addEventListener("click", async () => {
+      const text = document.getElementById("both-text-input").value;
+      const files = document.getElementById("both-image-input").files;
+      if (files.length > 0) {
+        askAIwithImages(files, text, "response3");
+      } else if (text.trim()) {
+        askAItextOnly(text, "response3");
+      } else {
+        alert("Please provide text or upload images.");
+      }
+    });
+  </script>
+
 
 
   <!-- Resources Section -->
@@ -204,16 +365,131 @@
   </button>
 
   <!-- Chatbot Container -->
-  <div id="chat-container" class="chat-container hidden" tabindex="0" role="region" aria-label="Terra Tech chat assistant">
-  <div class="chat-header">
-    <h3>Terra Tech Assistant</h3>
-    <button id="close-chat" class="close-chat" type="button" aria-label="Close chat">&times;</button>
-  </div>
-  <div id="chat-box" class="chat-box" aria-live="polite" aria-atomic="false" role="log">
-    <div class="message bot-message">👋 Welcome to Terra Tech! How can I help you with your farming questions today?</div>
+  <!-- Chatbot Container -->
+  <div id="chat-container" class="chat-container hidden" role="region" aria-label="Terra Tech chat assistant">
+    <div class="chat-header">
+      <h3>Terra Tech Assistant</h3>
+      <button id="close-chat" class="close-chat" aria-label="Close chat">&times;</button>
+    </div>
+    <div id="chat-box" class="chat-box" aria-live="polite" role="log">
+      <div class="message bot-message">👋 Welcome to Terra Tech! Ask me anything about farming and agriculture.</div>
+    </div>
+    <div class="chat-input">
+      <input id="user-input" type="text" placeholder="Type your farming question..." />
+      <button id="send-button">Send</button>
+    </div>
   </div>
 
- 
+  <script>
+    const API_KEY = "YOUR_OPENAI_API_KEY"; // ⚠️ Replace with your actual key
+    const API_URL = "https://api.openai.com/v1/chat/completions";
+
+    const chatButton = document.getElementById('chat-button');
+    const chatContainer = document.getElementById('chat-container');
+    const closeChatBtn = document.getElementById('close-chat');
+    const chatBox = document.getElementById('chat-box');
+    const userInput = document.getElementById('user-input');
+    const sendButton = document.getElementById('send-button');
+
+    chatButton.addEventListener('click', () => {
+      chatContainer.classList.toggle('hidden');
+      userInput.focus();
+    });
+    closeChatBtn.addEventListener('click', () => {
+      chatContainer.classList.add('hidden');
+    });
+
+    sendButton.addEventListener('click', sendMessage);
+    userInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') sendMessage();
+    });
+
+    function appendMessage(text, sender = 'bot') {
+      const messageDiv = document.createElement('div');
+      messageDiv.classList.add('message', sender === 'bot' ? 'bot-message' : 'user-message');
+      messageDiv.innerHTML = text;
+      chatBox.appendChild(messageDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function formatResponse(text) {
+      let formatted = text
+        .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+        .replace(/- (.*?)(\n|$)/g, "• $1<br>")
+        .replace(/\n/g, "<br>");
+      return formatted;
+    }
+
+    function createCollapsibleResponse(text) {
+      const formatted = formatResponse(text);
+      return `
+        <div class="response-content">
+          <div class="response-text collapsed">${formatted}</div>
+          <button class="toggle-btn">Read more ▼</button>
+        </div>
+      `;
+    }
+
+    document.addEventListener("click", function(e) {
+      if (e.target.classList.contains("toggle-btn")) {
+        const textDiv = e.target.previousElementSibling;
+        if (textDiv.classList.contains("collapsed")) {
+          textDiv.classList.remove("collapsed");
+          e.target.textContent = "Show less ▲";
+        } else {
+          textDiv.classList.add("collapsed");
+          e.target.textContent = "Read more ▼";
+        }
+      }
+    });
+
+    async function sendMessage() {
+      const message = userInput.value.trim();
+      if (!message) return;
+
+      appendMessage(message, 'user');
+      userInput.value = '';
+
+      // Loader
+      const loaderDiv = document.createElement('div');
+      loaderDiv.classList.add('loader');
+      chatBox.appendChild(loaderDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      try {
+        const res = await fetch(API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${API_KEY}`
+          },
+          body: JSON.stringify({
+            model: "gpt-4o-mini",
+            messages: [
+              { role: "system", content: "You are Terra Tech assistant. Only answer if the query is related to farming/agriculture. If not, politely say you only help with agriculture." },
+              { role: "user", content: message }
+            ],
+            max_tokens: 300
+          })
+        });
+
+        const data = await res.json();
+        loaderDiv.remove();
+
+        if (data.choices && data.choices.length > 0) {
+          appendMessage(createCollapsibleResponse(data.choices[0].message.content.trim()), 'bot');
+        } else {
+          appendMessage("⚠️ Sorry, I could not process your request.", 'bot');
+        }
+
+      } catch (err) {
+        loaderDiv.remove();
+        console.error(err);
+        appendMessage("⚠️ Error connecting to AI service.", 'bot');
+      }
+    }
+  </script>
+
   <!-- AOS JS -->
   <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
 
