@@ -167,3 +167,4 @@ bothSubmit.addEventListener("click", async () => {
 
   await askAI(messageContent);
 });
+
