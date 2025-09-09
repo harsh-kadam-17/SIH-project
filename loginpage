@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Based Farmer Query Support - Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <style>
+    body {
+      background: linear-gradient(135deg, #4ade80 0%, #dcfce7 50%, #16a34a 100%);
+      background-attachment: fixed;
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+    /* Farm related background image container */
+    .farm-bg {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1470&q=80');
+      background-size: cover;
+      background-position: center;
+      filter: brightness(0.6);
+    }
+    .card {
+      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.95);
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+    input:focus {
+      border-color: #16a34a;
+      ring: 2px solid #16a34a;
+    }
+    .error-visible {
+      animation: fadeIn 0.3s ease-in;
+    }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+    /* Modal styles */
+    .modal-bg {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+    .modal-bg.active {
+      display: flex;
+    }
+    .modal {
+      background: white;
+      border-radius: 0.5rem;
+      padding: 2rem;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      position: relative;
+    }
+    .modal h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: #16a34a;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .modal-close {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.75rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #4ade80;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+    }
+    .modal form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .modal form button {
+      margin-top: 0.5rem;
+    }
+    .modal .google-btn {
+      background: white;
+      border: 1px solid #d1d5db;
+      color: #374151;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: box-shadow 0.2s ease;
+    }
+    .modal .google-btn:hover {
+      box-shadow: 0 0 8px #34d399;
+    }
+    .modal .google-btn img {
+      width: 20px;
+      height: 20px;
+    }
+    .modal .switch-link {
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 0.875rem;
+      color: #16a34a;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4 relative">
+  <!-- Farm background image -->
+  <div class="farm-bg" aria-hidden="true"></div>
+
+  <div
+    class="card rounded-lg shadow-lg p-8 w-full max-w-md transition-transform duration-300 ease-in-out relative"
+  >
+    <div class="text-center mb-6">
+      <div
+        class="text-4xl text-green-700 mb-2 flex justify-center items-center space-x-2"
+      >
+        <i class="fas fa-leaf"></i>
+        <span class="font-bold">AI Farmer Advisor</span>
+      </div>
+      <p class="text-gray-700 italic">Query Support & Advisory System</p>
+      <div class="mt-4">
+        <img
+          src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=800&q=80"
+          alt="AI Farm Bots working in a lush crop field during harvest season with green vegetables, ripe fruits, and modern technology like drones and sensors for precision agriculture"
+          class="w-full h-32 object-cover rounded-lg shadow-sm"
+          onerror="this.style.display='none';"
+        />
+        <div
+          class="bg-green-100 p-2 rounded-lg text-green-800 text-xs mt-1"
+        >
+          Smart farming insights powered by AI
+        </div>
+      </div>
+    </div>
+
+    <form id="loginForm" class="space-y-4" novalidate>
+      <div class="relative">
+        <label
+          for="email"
+          class="block text-sm font-medium text-gray-700 mb-1"
+          >Email Address</label
+        >
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="farmer@email.com"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 pr-10"
+          required
+        />
+        <i class="fas fa-envelope absolute right-3 top-10 text-gray-400"></i>
+      </div>
+      <div class="relative">
+        <label
+          for="password"
+          class="block text-sm font-medium text-gray-700 mb-1"
+          >Password</label
+        >
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Enter your secure password"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 pr-10"
+          required
+          minlength="8"
+        />
+        <i class="fas fa-lock absolute right-3 top-10 text-gray-400"></i>
+      </div>
+      <div
+        id="errorMessage"
+        class="text-red-600 text-sm hidden error-visible"
+      >
+        Invalid email or password. Please check and try again.
+      </div>
+      <button
+        type="submit"
+        class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2"
+      >
+        <i class="fas fa-sign-in-alt"></i>
+        <span>Log In to Access Farm Insights</span>
+      </button>
+    </form>
+
+    <div class="text-center mt-6 space-y-3">
+      <a
+        href="#"
+        id="forgotPasswordLink"
+        class="text-sm text-green-600 hover:text-green-800 underline block"
+        >Forgot Password?</a
+      >
+
+      <div class="flex items-center justify-center space-x-3">
+        <hr class="w-1/4 border-gray-300" />
+        <span class="text-gray-500 text-sm">or</span>
+        <hr class="w-1/4 border-gray-300" />
+      </div>
+
+      <button
+        id="googleSignInBtn"
+        class="w-full bg-white border border-gray-300 rounded-lg py-3 px-4 flex items-center justify-center space-x-3 hover:shadow-md transition-shadow duration-200"
+        aria-label="Sign in with Google"
+        type="button"
+      >
+        <img
+          src="https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png"
+          class="w-6 h-6" alt="Google logo"
+          />
+    <span class="text-gray-700 font-semibold">Sign in with Google</span>
+      </button>
+
+      <p class="text-sm text-gray-600 mt-4">
+        Don't have an account?
+        <a
+          href="#"
+          id="signupLink"
+          class="text-green-600 hover:text-green-800 font-semibold"
+          >Sign Up</a
+        >
+      </p>
+    </div>
+  </div>
+
+  <!-- Signup Modal -->
+  <div id="signupModal" class="modal-bg" role="dialog" aria-modal="true" aria-labelledby="signupTitle" tabindex="-1">
+    <div class="modal">
+      <button class="modal-close" aria-label="Close signup modal">&times;</button>
+      <h2 id="signupTitle"><i class="fas fa-user-plus"></i> Sign Up</h2>
+      <form id="signupForm" novalidate>
+        <label for="signupEmail" class="block text-sm font-medium text-gray-700">Email Address</label>
+        <input type="email" id="signupEmail" name="signupEmail" placeholder="farmer@email.com" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 mb-4" required />
+        <label for="signupPassword" class="block text-sm font-medium text-gray-700">Password</label>
+        <input type="password" id="signupPassword" name="signupPassword" placeholder="Create a secure password" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 mb-4" minlength="8" required />
+        <div id="signupError" class="text-red-600 text-sm hidden mb-2"></div>
+        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2">
+          <i class="fas fa-user-plus"></i>
+          <span>Sign Up</span>
+        </button>
+      </form>
+      <p class="switch-link" id="switchToLogin">Already have an account? Log In</p>
+    </div>
+  </div>
+
+  <!-- Google Sign-In Modal -->
+  <div id="googleModal" class="modal-bg" role="dialog" aria-modal="true" aria-labelledby="googleTitle" tabindex="-1">
+    <div class="modal">
+      <button class="modal-close" aria-label="Close Google sign-in modal">&times;</button>
+      <h2 id="googleTitle"><img src="https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png" alt="Google logo" class="w-6 h-6 inline-block mr-2" /> Sign in with Google</h2>
+      <form id="googleForm" novalidate>
+        <label for="googleEmail" class="block text-sm font-medium text-gray-700">Google Email Address</label>
+        <input type="email" id="googleEmail" name="googleEmail" placeholder="Enter your email address@gmail.com" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 mb-4" required />
+        <div id="googleError" class="text-red-600 text-sm hidden mb-2"></div>
+        <button type="submit" class="w-full bg-white border border-gray-300 text-gray-700 font-semibold py-3 rounded-lg flex items-center justify-center space-x-2 hover:shadow-md transition-shadow duration-200">
+          <img src="https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png" alt="Google logo" class="w-6 h-6" />
+          <span>Sign In</span>
+        </button>
+      </form>
+      <p class="switch-link" id="switchToLoginFromGoogle">Back to Log In</p>
+    </div>
+  </div>
+
+  <script>
+    // Utility function to show modal
+    function showModal(modal) {
+      modal.classList.add('active');
+      modal.querySelector('input, button').focus();
+      document.body.style.overflow = 'hidden';
+    }
+    // Utility function to hide modal
+    function hideModal(modal) {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    // Elements
+    const signupModal = document.getElementById('signupModal');
+    const googleModal = document.getElementById('googleModal');
+    const signupLink = document.getElementById('signupLink');
+    const googleSignInBtn = document.getElementById('googleSignInBtn');
+    const switchToLogin = document.getElementById('switchToLogin');
+    const switchToLoginFromGoogle = document.getElementById('switchToLoginFromGoogle');
+    const loginForm = document.getElementById('loginForm');
+    const signupForm = document.getElementById('signupForm');
+    const googleForm = document.getElementById('googleForm');
+    const errorMessage = document.getElementById('errorMessage');
+    const signupError = document.getElementById('signupError');
+    const googleError = document.getElementById('googleError');
+
+    // Open signup modal
+    signupLink.addEventListener('click', e => {
+      e.preventDefault();
+      showModal(signupModal);
+    });
+
+    // Open Google sign-in modal
+    googleSignInBtn.addEventListener('click', e => {
+      e.preventDefault();
+      showModal(googleModal);
+    });
+
+    // Close modals on close button click
+    document.querySelectorAll('.modal-close').forEach(btn => {
+      btn.addEventListener('click', e => {
+        const modal = e.target.closest('.modal-bg');
+        hideModal(modal);
+      });
+    });
+
+    // Switch to login from signup modal
+    switchToLogin.addEventListener('click', () => {
+      hideModal(signupModal);
+    });
+
+    // Switch to login from google modal
+    switchToLoginFromGoogle.addEventListener('click', () => {
+      hideModal(googleModal);
+    });
+
+    // Login form validation and submission simulation
+    loginForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const email = loginForm.email.value.trim();
+      const password = loginForm.password.value;
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!emailRegex.test(email)) {
+        errorMessage.textContent = 'Please enter a valid email address.';
+        errorMessage.classList.remove('hidden');
+        return;
+      }
+      if (password.length < 8) {
+        errorMessage.textContent = 'Password must be at least 8 characters long for security.';
+        errorMessage.classList.remove('hidden');
+        return;
+      }
+      errorMessage.classList.add('hidden');
+      alert(`Login successful!\nEmail: ${email}\nWelcome back to AI Farmer Advisor!`);
+      loginForm.reset();
+    });
+
+    // Signup form validation and submission simulation
+    signupForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const email = signupForm.signupEmail.value.trim();
+      const password = signupForm.signupPassword.value;
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!emailRegex.test(email)) {
+        signupError.textContent = 'Please enter a valid email address.';
+        signupError.classList.remove('hidden');
+        return;
+      }
+      if (password.length < 8) {
+        signupError.textContent = 'Password must be at least 8 characters long.';
+        signupError.classList.remove('hidden');
+        return;
+      }
+      signupError.classList.add('hidden');
+      alert(`Signup successful!\nEmail: ${email}\nYou can now log in.`);
+      signupForm.reset();
+      hideModal(signupModal);
+    });
+
+    // Google form validation and submission simulation
+    googleForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const email = googleForm.googleEmail.value.trim();
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!emailRegex.test(email)) {
+        googleError.textContent = 'Please enter a valid Google email address.';
+        googleError.classList.remove('hidden');
+        return;
+      }
+      googleError.classList.add('hidden');
+      alert(`Google Sign-In successful!\nEmail: ${email}\nWelcome to AI Farmer Advisor!`);
+      googleForm.reset();
+      hideModal(googleModal);
+    });
+
+    // Responsive card width adjustment
+    window.addEventListener('resize', () => {
+      const card = document.querySelector('.card');
+      if (window.innerWidth < 640) {
+        card.classList.remove('max-w-md');
+        card.classList.add('max-w-sm');
+      } else {
+        card.classList.remove('max-w-sm');
+        card.classList.add('max-w-md');
+      }
+    });
+  </script>
+</body>
+</html>
